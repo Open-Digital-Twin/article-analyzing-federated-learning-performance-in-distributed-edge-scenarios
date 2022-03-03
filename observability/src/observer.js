@@ -1,4 +1,3 @@
-const time = require('time');
 const dockerService = require('./docker-service');
 
 observe = async () => {
@@ -14,7 +13,7 @@ observe = async () => {
             const stats = await dockerService.getContainerStats(containerInfo.host, containerInfo.ID);
             containerInfo.push(stats);
         }
-        time.sleep(2);
+        await sleep(2000);
     }
 
     console.log(containerInfos);
@@ -23,6 +22,10 @@ observe = async () => {
 const anyContainerIsRunning = async () => {
     const containerInfos = await dockerService.getAllContainerInfo();
     return containerInfos.some(containerInfo => containerInfo.state === 'Running');
+}
+
+const sleep = (ms) => {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = observe();
