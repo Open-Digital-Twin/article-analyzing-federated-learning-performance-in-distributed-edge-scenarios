@@ -26,8 +26,8 @@ exports.getAllContainerInfo = async() => {
 */
 exports.getContainerStats = async(containerInfo) => {
     for (let container of containerInfo) {
-        const stats = await sendGetRequest(`http://${container.host}:2375/containers/${container.ID}/stats?stream=false`);
-        container.stats = stats.cpu_stats
+        const response = await sendGetRequest(`http://${container.host}:2375/containers/${container.ID}/stats?stream=false`);
+        container.stats = response.data.cpu_stats
     }
 }
 
