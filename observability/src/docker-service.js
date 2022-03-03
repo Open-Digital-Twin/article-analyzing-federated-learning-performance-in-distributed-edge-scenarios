@@ -1,4 +1,4 @@
-import { get } from 'axios';
+const axios = require('axios');
 
 /**
  * @typedef {Object} ContainerInfo
@@ -15,7 +15,7 @@ import { get } from 'axios';
  * @param {string[]} nodes - List of nodes.
  * @returns {ContainerInfo[]} containerInfos - List of container information.
  */
-export async function getAllContainerInfo(nodes) {
+exports.getAllContainerInfo = (nodes) => {
     const containerInfos = []
     for (let node of nodes) {
         const response = await sendGetRequest(`http://${node}:2375/containers/json`);
@@ -39,7 +39,7 @@ export async function getAllContainerInfo(nodes) {
  * @param {string} host - Host node of the container.
  * @returns {Object} containerStats - Stats of the container.
  */
-export async function getContainerStats(host, id) {
+exports.getContainerStats = (host, id) => {
     const response = await sendGetRequest(`http://${host}:2375/containers/${id}/stats?stream=false`);
     return response.data.cpu_stats;
 }
@@ -52,7 +52,7 @@ const getContainerImageName = (image) => {
 
 const sendGetRequest = async (url) => {
     try {
-        const response = await get(url);
+        const response = await axios.get(url);
         return response;
     } catch (err) {
         console.error(err);
