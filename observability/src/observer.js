@@ -22,7 +22,7 @@ observe = async () => {
 
 const anyContainerIsRunning = async () => {
     const containerInfos = await dockerService.getAllContainerInfo(NODES);
-    return containerInfos.some(containerInfo => containerInfo.state === 'Running');
+    return containerInfos.some(containerInfo => containerInfo.state === 'running');
 }
 
 const sleep = (ms) => {
