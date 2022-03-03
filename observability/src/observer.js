@@ -1,8 +1,9 @@
 const dockerService = require('./docker-service');
 
+const NODES = ['ffremde01', 'ffremde02', 'ffremde03', 'ffremde-master'];
+
 observe = async () => {
-    const nodes = ['ffremde01', 'ffremde02', 'ffremde03', 'ffremde-master'];
-    const containerInfos = await dockerService.getAllContainerInfo(nodes);
+    const containerInfos = await dockerService.getAllContainerInfo(NODES);
     for (const containerInfo of containerInfos) {
         const stats = await dockerService.getContainerStats(containerInfo.host, containerInfo.ID);
         containerInfo.stats.push(stats);
@@ -20,7 +21,7 @@ observe = async () => {
 }
 
 const anyContainerIsRunning = async () => {
-    const containerInfos = await dockerService.getAllContainerInfo();
+    const containerInfos = await dockerService.getAllContainerInfo(NODES);
     return containerInfos.some(containerInfo => containerInfo.state === 'Running');
 }
 
