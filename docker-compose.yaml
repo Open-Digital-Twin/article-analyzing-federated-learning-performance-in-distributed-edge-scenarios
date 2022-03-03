@@ -6,6 +6,10 @@ services:
     image: 'fernandoremde/flower-federated:server'
     environment:
       - SERVER_IP=0.0.0.0:8080
+      - FRACTION_FIT=0.1
+      - MIN_FIT_CLIENTS=4
+      - MIN_AVAILABLE_CLIENTS=4
+      - NUM_ROUNDS=3
     networks:
       - default
     restart: always
