@@ -4,15 +4,11 @@ const NODES = ['ffremde01', 'ffremde02', 'ffremde03', 'ffremde-master'];
 
 observe = async () => {
     const containerInfos = await dockerService.getAllContainerInfo(NODES);
-    for (const containerInfo of containerInfos) {
-        const stats = await dockerService.getContainerStats(containerInfo.host, containerInfo.ID);
-        containerInfo.stats.push(stats);
-    }
 
     while(await anyContainerIsRunning()) {
         for (const containerInfo of containerInfos) {
             const stats = await dockerService.getContainerStats(containerInfo.host, containerInfo.ID);
-            containerInfo.push(stats);
+            containerInfo.stats.push(stats);
         }
         await sleep(2000);
     }
