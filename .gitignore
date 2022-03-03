@@ -6,6 +6,7 @@ cifar-10-new-batches
 client3
 full-client
 node_modules
+out
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
