@@ -1,4 +1,5 @@
 const dockerService = require('./docker-service');
+fs = require('fs');
 
 const NODES = ['ffremde01', 'ffremde02', 'ffremde03', 'ffremde-master'];
 
@@ -10,10 +11,11 @@ observe = async () => {
             const stats = await dockerService.getContainerStats(containerInfo.host, containerInfo.ID);
             containerInfo.stats.push(stats);
         }
-        console.log(containerInfos);
+        console.info(containerInfos);
         await sleep(2000);
     }
 
+    fs.writeFile('filename', containerInfos);
 }
 
 const anyContainerIsRunning = async () => {
