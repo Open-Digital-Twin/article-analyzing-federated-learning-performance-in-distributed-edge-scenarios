@@ -25,7 +25,8 @@ exports.getAllContainerInfo = async (nodes) => {
                 host: node,
                 image: getContainerImageName(container.Image),
                 state: container.State,
-                status: container.Status
+                status: container.Status,
+                stats = []
             });
         });
     }

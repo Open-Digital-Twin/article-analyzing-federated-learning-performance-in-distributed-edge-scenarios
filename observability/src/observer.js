@@ -5,7 +5,7 @@ observe = async () => {
     const containerInfos = await dockerService.getAllContainerInfo(nodes);
     for (const containerInfo of containerInfos) {
         const stats = await dockerService.getContainerStats(containerInfo.host, containerInfo.ID);
-        containerInfo.push(stats);
+        containerInfo.stats.push(stats);
     }
 
     while(await anyContainerIsRunning()) {
