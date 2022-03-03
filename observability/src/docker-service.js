@@ -15,7 +15,7 @@ const axios = require('axios');
  * @param {string[]} nodes - List of nodes.
  * @returns {ContainerInfo[]} containerInfos - List of container information.
  */
-exports.getAllContainerInfo = (nodes) => {
+exports.getAllContainerInfo = async (nodes) => {
     const containerInfos = []
     for (let node of nodes) {
         const response = await sendGetRequest(`http://${node}:2375/containers/json`);
@@ -39,7 +39,7 @@ exports.getAllContainerInfo = (nodes) => {
  * @param {string} host - Host node of the container.
  * @returns {Object} containerStats - Stats of the container.
  */
-exports.getContainerStats = (host, id) => {
+exports.getContainerStats = async (host, id) => {
     const response = await sendGetRequest(`http://${host}:2375/containers/${id}/stats?stream=false`);
     return response.data.cpu_stats;
 }
