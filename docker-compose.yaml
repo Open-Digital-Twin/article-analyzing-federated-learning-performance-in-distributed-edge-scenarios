@@ -3,7 +3,6 @@ version: '3'
 services:
 
   server:
-    container_name: server
     image: 'fernandoremde/flower-federated:server'
     environment:
       - SERVER_IP=0.0.0.0:8080
