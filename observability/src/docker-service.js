@@ -1,4 +1,4 @@
-const axios = require('axios');
+import { get } from 'axios';
 
 /**
  * @typedef {Object} ContainerInfo
@@ -7,7 +7,7 @@ const axios = require('axios');
  * @property {string} containerInfos[].image - The name of the image.
  * @property {string} containerInfos[].state - The state of a container.
  * @property {string} containerInfos[].status - The status of a container.
- * @property {string} containerInfos[].stats - The stats of a container.
+ * @property {Object[]} containerInfos[].stats - Array of stats of a container.
  */
 
 /**
@@ -15,7 +15,7 @@ const axios = require('axios');
  * @param {string[]} nodes - List of nodes.
  * @returns {ContainerInfo[]} containerInfos - List of container information.
  */
-exports.getAllContainerInfo = async(nodes) => {
+export async function getAllContainerInfo(nodes) {
     const containerInfos = []
     for (let node of nodes) {
         const response = await sendGetRequest(`http://${node}:2375/containers/json`);
@@ -39,7 +39,7 @@ exports.getAllContainerInfo = async(nodes) => {
  * @param {string} host - Host node of the container.
  * @returns {Object} containerStats - Stats of the container.
  */
-exports.getContainerStats = async(host, id) => {
+export async function getContainerStats(host, id) {
     const response = await sendGetRequest(`http://${host}:2375/containers/${id}/stats?stream=false`);
     return response.data.cpu_stats;
 }
@@ -52,7 +52,7 @@ const getContainerImageName = (image) => {
 
 const sendGetRequest = async (url) => {
     try {
-        const response = await axios.get(url);
+        const response = await get(url);
         return response;
     } catch (err) {
         console.error(err);
