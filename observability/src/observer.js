@@ -10,10 +10,10 @@ observe = async () => {
             const stats = await dockerService.getContainerStats(containerInfo.host, containerInfo.ID);
             containerInfo.stats.push(stats);
         }
+        console.log(containerInfos);
         await sleep(2000);
     }
 
-    console.log(containerInfos);
 }
 
 const anyContainerIsRunning = async () => {
