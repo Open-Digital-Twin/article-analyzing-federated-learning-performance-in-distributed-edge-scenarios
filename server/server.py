@@ -26,11 +26,11 @@ class AggregateCustomMetricStrategy(fl.server.strategy.FedAvg):
 
 if __name__ == "__main__":
 
-    server_fraction_fit = os.environ['FRACTION_FIT']
-    server_min_fit_clients = os.environ['MIN_FIT_CLIENTS']
-    server_min_available_clients = os.environ['MIN_AVAILABLE_CLIENTS']
+    server_fraction_fit = float(os.environ['FRACTION_FIT'])
+    server_min_fit_clients = int(os.environ['MIN_FIT_CLIENTS'])
+    server_min_available_clients = int(os.environ['MIN_AVAILABLE_CLIENTS'])
 
-    server_num_rounds = os.environ['NUM_ROUNDS']
+    server_num_rounds = int(os.environ['NUM_ROUNDS'])
 
     server_ip = os.environ['SERVER_IP']
 
