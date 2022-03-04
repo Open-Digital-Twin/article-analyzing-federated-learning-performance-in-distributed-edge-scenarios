@@ -18,9 +18,9 @@ const axios = require('axios');
  * @returns {ContainerInfo[]} containerInfos - List of container information with stats.
  */
 exports.getAllContainersInfosWithStats = async (nodes, port) => {
-    const containerInfos = this.getAllContainersInfos(nodes, port);
+    const containerInfos = await this.getAllContainersInfos(nodes, port);
     for (const containerInfo of containerInfos) {
-        const stats = this.getContainerStats(containerInfo.host, containerInfo.ID);
+        const stats = await this.getContainerStats(containerInfo.host, containerInfo.ID);
         containerInfo.stats = stats;
     }
 
