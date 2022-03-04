@@ -33,7 +33,9 @@ observe = async () => {
         // and remove it from the list
         containerInfos.forEach((containerInfo, index) => {
             if (!updatedContainerInfosIds.includes(containerInfo.ID)) {
+                const currentTime = new Date().toISOString();
                 console.info(containerInfo);
+                fs.writeFileSync(`/reports/${containerInfo.image} - ${currentTime}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
             }
         });

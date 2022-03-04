@@ -50,6 +50,8 @@ services:
     networks:
       - default
     restart: always
+    volumes:
+      - "~:/reports"
     deploy:
       replicas: 1
       placement:
