@@ -35,7 +35,7 @@ exports.getAllContainersInfosWithStats = async (nodes, port) => {
  * @returns {Promise<ContainerInfo[]>} containerInfos - List of container information.
  */
 exports.getAllContainersInfos = async (nodes, port) => {
-    const containerInfos = []
+    const containerInfos = [];
     for (let node of nodes) {
         const defaultPort = '2375';
         const response = await sendGetRequest(`http://${node}:${port || defaultPort}/containers/json`);
@@ -66,7 +66,7 @@ exports.getContainerStats = async (host, id) => {
 }
 
 const getContainerImageName = (image) => {
-    const regex = /(?<=\:)(.*?)(?=\@)/
+    const regex = /(?<=\:)(.*?)(?=\@)/;
     const found = image.match(regex);
     return found[0];
 }

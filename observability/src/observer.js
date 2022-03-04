@@ -22,7 +22,7 @@ observe = async () => {
                         containerInfo.status = updatedContainerInfo.status;
                         containerInfo.stats.push(updatedContainerInfo.stats);
                     }
-                })
+                });
             } else {
                 containerInfos.push(updatedContainerInfo);
             }
@@ -36,7 +36,7 @@ observe = async () => {
                 console.info(containerInfo);
                 containerInfos.splice(index, 1);
             }
-        })
+        });
 
         await sleep(5000);
     }
