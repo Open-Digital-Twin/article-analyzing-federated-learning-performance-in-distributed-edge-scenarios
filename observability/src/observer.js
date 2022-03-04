@@ -4,22 +4,44 @@ fs = require('fs');
 const NODES = ['ffremde01', 'ffremde02', 'ffremde03', 'ffremde-master'];
 
 observe = async () => {
-    const containerInfos = await dockerService.getAllContainerInfo(NODES);
+    let containerInfos = await dockerService.getAllContainersInfosWithStats(NODES);
 
-    while(await anyContainerIsRunning()) {
-        for (const containerInfo of containerInfos) {
-            const stats = await dockerService.getContainerStats(containerInfo.host, containerInfo.ID);
-            containerInfo.stats.push(stats);
-        }
-        console.info(containerInfos);
-        await sleep(2000);
+    while(anyContainerIsRunning(containerInfos)) {
+        const containerInfosIds = containerInfos.map(containerInfo => containerInfo.ID);
+        const updatedContainerInfos = await dockerService.getAllContainersInfosWithStats(NODES);
+        const updatedContainerInfosIds = updatedContainerInfos.map(updatedContainerInfo => updatedContainerInfo.ID);
+
+        updatedContainerInfos.forEach(updatedContainerInfo => {
+            // If container already retrieved, only update the State,
+            // Status, and push the retrieved Stats to the array.
+            // Else it's a new container, then add it to the containerInfos list.
+            if (containerInfosIds.includes(updatedContainerInfo.ID)) {
+                containerInfos.forEach(containerInfo => {
+                    if (containerInfo.ID === updatedContainerInfo.ID) {
+                        containerInfo.state = updatedContainerInfo.state;
+                        containerInfo.status = updatedContainerInfo.status;
+                        containerInfo.stats.push(updatedContainerInfo.stats);
+                    }
+                })
+            } else {
+                containerInfos.push(updatedContainerInfo);
+            }
+        })
+
+        // If there is a container in containerInfo which hasn't been retrieved,
+        // it means the container stopped. Therefore, we can persist its stats
+        containerInfos.forEach(containerInfo => {
+            if (!updatedContainerInfosIds.includes(containerInfo.ID)) {
+                console.info(containerInfo);
+            }
+        })
+
+        await sleep(5000);
+        containerInfos = await dockerService.getAllContainersInfosWithStats(NODES);
     }
-
-    fs.writeFile('filename', containerInfos);
 }
 
-const anyContainerIsRunning = async () => {
-    const containerInfos = await dockerService.getAllContainerInfo(NODES);
+const anyContainerIsRunning = () => {
     return containerInfos.some(containerInfo => containerInfo.state === 'running');
 }
 

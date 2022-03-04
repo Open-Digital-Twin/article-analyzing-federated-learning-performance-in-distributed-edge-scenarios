@@ -11,14 +11,34 @@ const axios = require('axios');
  */
 
 /**
- * Retrieves an array of container information for every containers of the given nodes
+ * Retrieves an array of container information for every 
+ * containers of the given nodes alongside their stats
  * @param {string[]} nodes - List of nodes.
+ * @param {string} [port=2375] - Port to access node.
+ * @returns {ContainerInfo[]} containerInfos - List of container information with stats.
+ */
+exports.getAllContainersInfosWithStats = async (nodes, port) => {
+    const containerInfos = getAllContainersInfos(nodes, port);
+    for (const containerInfo of containerInfos) {
+        const stats = getContainerStats(containerInfo.host, containerInfo.ID);
+        containerInfo.stats = stats;
+    }
+
+    return containerInfos;
+}
+
+/**
+ * Retrieves an array of container information for every containers of the given nodes.
+ * The stats are not retrieved, only the current information for the container.
+ * @param {string[]} nodes - List of nodes.
+ * @param {string} [port=2375] - Port to access node.
  * @returns {ContainerInfo[]} containerInfos - List of container information.
  */
-exports.getAllContainerInfo = async (nodes) => {
+exports.getAllContainersInfos = async (nodes, port) => {
     const containerInfos = []
     for (let node of nodes) {
-        const response = await sendGetRequest(`http://${node}:2375/containers/json`);
+        const defaultPort = '2375';
+        const response = await sendGetRequest(`http://${node}:${port || defaultPort}/containers/json`);
         response.data.forEach(container => {
             containerInfos.push({
                 ID: container.Id,
