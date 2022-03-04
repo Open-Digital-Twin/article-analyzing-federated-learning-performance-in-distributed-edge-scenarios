@@ -15,7 +15,7 @@ const axios = require('axios');
  * containers of the given nodes alongside their stats
  * @param {string[]} nodes - List of nodes.
  * @param {string} [port=2375] - Port to access node.
- * @returns {ContainerInfo[]} containerInfos - List of container information with stats.
+ * @returns {Promise<ContainerInfo[]>} containerInfos - List of container information with stats.
  */
 exports.getAllContainersInfosWithStats = async (nodes, port) => {
     const containerInfos = await this.getAllContainersInfos(nodes, port);
@@ -32,7 +32,7 @@ exports.getAllContainersInfosWithStats = async (nodes, port) => {
  * The stats are not retrieved, only the current information for the container.
  * @param {string[]} nodes - List of nodes.
  * @param {string} [port=2375] - Port to access node.
- * @returns {ContainerInfo[]} containerInfos - List of container information.
+ * @returns {Promise<ContainerInfo[]>} containerInfos - List of container information.
  */
 exports.getAllContainersInfos = async (nodes, port) => {
     const containerInfos = []
@@ -58,7 +58,7 @@ exports.getAllContainersInfos = async (nodes, port) => {
  * Retrieves stats for a given container in a given host.
  * @param {string} id - ID of the container.
  * @param {string} host - Host node of the container.
- * @returns {Object} containerStats - Stats of the container.
+ * @returns {Promise<Object>} containerStats - Stats of the container.
  */
 exports.getContainerStats = async (host, id) => {
     const response = await sendGetRequest(`http://${host}:2375/containers/${id}/stats?stream=false`);
