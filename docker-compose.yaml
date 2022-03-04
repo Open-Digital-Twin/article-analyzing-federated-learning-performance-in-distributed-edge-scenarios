@@ -51,7 +51,7 @@ services:
       - default
     restart: always
     volumes:
-      - "~:/reports"
+      - "~/reports:/reports"
     deploy:
       replicas: 1
       placement:
