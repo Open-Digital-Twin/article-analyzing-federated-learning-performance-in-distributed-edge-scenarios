@@ -35,7 +35,7 @@ observe = async () => {
             if (!updatedContainerInfosIds.includes(containerInfo.ID)) {
                 const currentTime = new Date().toISOString();
                 console.info(containerInfo);
-                fs.writeFileSync(`/reports/${containerInfo.image}/${currentTime}`, JSON.stringify(containerInfo.stats));
+                fs.writeFileSync(`/reports/${containerInfo.image}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
             }
         });
