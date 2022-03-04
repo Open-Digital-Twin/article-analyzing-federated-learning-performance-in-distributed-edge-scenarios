@@ -33,9 +33,12 @@ observe = async () => {
         // and remove it from the list
         containerInfos.forEach((containerInfo, index) => {
             if (!updatedContainerInfosIds.includes(containerInfo.ID)) {
-                const currentTime = new Date().toISOString();
                 console.info(containerInfo);
-                fs.writeFileSync(`/reports/${containerInfo.image}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
+
+                const currentTime = new Date().toISOString();
+                const targetDir = `/reports/${containerInfo.image}`;
+                fs.mkdirSync(targetDir, { recursive: true });
+                fs.writeFileSync(`${targetDir}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
             }
         });
