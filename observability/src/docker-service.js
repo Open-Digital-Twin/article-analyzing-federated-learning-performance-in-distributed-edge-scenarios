@@ -21,7 +21,7 @@ exports.getAllContainersInfosWithStats = async (nodes, port) => {
     const containerInfos = await this.getAllContainersInfos(nodes, port);
     for (const containerInfo of containerInfos) {
         const stats = await this.getContainerStats(containerInfo.host, containerInfo.ID);
-        containerInfo.stats = stats;
+        containerInfo.stats = [stats];
     }
 
     return containerInfos;
