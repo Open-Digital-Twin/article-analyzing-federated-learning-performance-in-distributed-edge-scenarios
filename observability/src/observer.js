@@ -41,7 +41,7 @@ observe = async () => {
     }
 }
 
-const anyContainerIsRunning = () => {
+const anyContainerIsRunning = (containerInfos) => {
     return containerInfos.some(containerInfo => containerInfo.state === 'running');
 }
 
