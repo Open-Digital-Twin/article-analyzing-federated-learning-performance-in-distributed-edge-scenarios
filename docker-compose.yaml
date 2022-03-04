@@ -47,7 +47,6 @@ services:
 
   observer:
     image: 'fernandoremde/flower-federated:observer'
-    environment:
     networks:
       - default
     restart: always
