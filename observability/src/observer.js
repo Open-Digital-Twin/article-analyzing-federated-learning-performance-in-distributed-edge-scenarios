@@ -30,14 +30,15 @@ observe = async () => {
 
         // If there is a container in containerInfo which hasn't been retrieved,
         // it means the container stopped. Therefore, we can persist its stats
-        containerInfos.forEach(containerInfo => {
+        // and remove it from the list
+        containerInfos.forEach((containerInfo, index) => {
             if (!updatedContainerInfosIds.includes(containerInfo.ID)) {
                 console.info(containerInfo);
+                containerInfos.splice(index, 1);
             }
         })
 
         await sleep(5000);
-        containerInfos = await dockerService.getAllContainersInfosWithStats(NODES);
     }
 }
 
