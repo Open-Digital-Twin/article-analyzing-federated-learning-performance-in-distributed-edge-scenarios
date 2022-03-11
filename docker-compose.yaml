@@ -47,6 +47,8 @@ services:
 
   observer:
     image: 'fernandoremde/flower-federated:observer'
+    environment:
+      - EXPERIMENT_NAME=green
     networks:
       - default
     restart: always
