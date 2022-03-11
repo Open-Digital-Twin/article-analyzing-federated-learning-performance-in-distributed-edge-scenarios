@@ -21,7 +21,7 @@ observe = async () => {
                     if (containerInfo.ID === updatedContainerInfo.ID) {
                         containerInfo.state = updatedContainerInfo.state;
                         containerInfo.status = updatedContainerInfo.status;
-                        containerInfo.stats.push(updatedContainerInfo.stats);
+                        containerInfo.stats.push(updatedContainerInfo.stats[0]);
                     }
                 });
             } else {
