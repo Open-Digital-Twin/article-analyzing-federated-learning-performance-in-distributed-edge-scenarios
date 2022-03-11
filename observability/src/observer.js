@@ -2,6 +2,7 @@ const dockerService = require('./docker-service');
 fs = require('fs');
 
 const NODES = ['ffremde01', 'ffremde02', 'ffremde03', 'ffremde-master'];
+const EXPERIMENT_NAME = process.env.EXPERIMENT_NAME.toString();
 
 observe = async () => {
     let containerInfos = await dockerService.getAllContainersInfosWithStats(NODES);
@@ -36,7 +37,7 @@ observe = async () => {
                 console.info(containerInfo);
 
                 const currentTime = new Date().toISOString();
-                const targetDir = `/reports/${containerInfo.image}`;
+                const targetDir = `/reports/${EXPERIMENT_NAME}/${containerInfo.image}`;
                 fs.mkdirSync(targetDir, { recursive: true });
                 fs.writeFileSync(`${targetDir}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
