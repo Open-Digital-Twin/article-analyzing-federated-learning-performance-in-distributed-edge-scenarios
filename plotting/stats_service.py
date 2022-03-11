@@ -1,3 +1,4 @@
+from email.mime import image
 import json
 import os
 import datetime as DT
@@ -32,28 +33,28 @@ def get_average(list):
 # with arrays for relevant stats for each tick for every
 # container that ran with that image in that experiment
 def get_arrays_for_stats(experiment_name, image_name):
-    all_stats = { 'memories': [], 'cpus': [], 'timestamps': [], 'bytes_received': [], 'bytes_transmitted': [] }
+    all_stats = { 'memories': [], 'cpus': [], 'timestamps': [], 'bytes_received': [], 'bytes_transmitted': [], 'packets_received': [], 'packets_transmitted': [] }
     dir = f'../../../../{experiment_name}/{image_name}'
     for file in os.listdir(dir):
-        image_memory = []
-        image_cpu = []
-        image_timestamp = []
-        image_bytes_received = []
-        image_bytes_transmitted = []
+        image_stats = { 'memories': [], 'cpus': [], 'timestamps': [], 'bytes_received': [], 'bytes_transmitted': [], 'packets_received': [], 'packets_transmitted': [] }
         data = open_file(f'{dir}/{file}')
         starting_timestamp = data[0]['read']
         data.pop() # Removing last element as it usually contains erroneous stats
         for container_stat in data:
-            image_memory.append(get_memory_percentage(container_stat))
-            image_cpu.append(get_cpu_percentage(container_stat))
-            image_timestamp.append(get_time_from_start(container_stat, starting_timestamp))
-            image_bytes_received.append(container_stat['networks']['eth0']['rx_bytes'])
-            image_bytes_transmitted.append(container_stat['networks']['eth0']['tx_bytes'])
-        all_stats['memories'].append(image_memory)
-        all_stats['cpus'].append(image_cpu)
-        all_stats['timestamps'].append(image_timestamp)
-        all_stats['bytes_received'].append(image_bytes_received)
-        all_stats['bytes_transmitted'].append(image_bytes_transmitted)
+            image_stats['memories'].append(get_memory_percentage(container_stat))
+            image_stats['cpus'].append(get_cpu_percentage(container_stat))
+            image_stats['timestamps'].append(get_time_from_start(container_stat, starting_timestamp))
+            image_stats['bytes_received'].append(container_stat['networks']['eth0']['rx_bytes']/100)
+            image_stats['bytes_transmitted'].append(container_stat['networks']['eth0']['tx_bytes']/100)
+            image_stats['packets_received'].append(container_stat['networks']['eth0']['rx_packets'])
+            image_stats['packets_transmitted'].append(container_stat['networks']['eth0']['tx_packets'])
+        all_stats['memories'].append(image_stats['memories'])
+        all_stats['cpus'].append(image_stats['cpus'])
+        all_stats['timestamps'].append(image_stats['timestamps'])
+        all_stats['bytes_received'].append(image_stats['bytes_received'])
+        all_stats['bytes_transmitted'].append(image_stats['bytes_transmitted'])
+        all_stats['packets_received'].append(image_stats['packets_received'])
+        all_stats['packets_transmitted'].append(image_stats['packets_transmitted'])
     return all_stats
 
 # Receives an array containing arrays of stats ticks
