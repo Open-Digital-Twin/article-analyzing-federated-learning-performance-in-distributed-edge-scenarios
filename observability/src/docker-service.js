@@ -62,7 +62,7 @@ exports.getAllContainersInfos = async (nodes, port) => {
  */
 exports.getContainerStats = async (host, id) => {
     const response = await sendGetRequest(`http://${host}:2375/containers/${id}/stats?stream=false`);
-    return response.data.cpu_stats;
+    return response.data;
 }
 
 const getContainerImageName = (image) => {
