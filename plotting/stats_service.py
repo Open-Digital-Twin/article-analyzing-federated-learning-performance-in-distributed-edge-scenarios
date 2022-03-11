@@ -40,14 +40,22 @@ def get_arrays_for_stats(experiment_name, image_name):
         data = open_file(f'{dir}/{file}')
         starting_timestamp = data[0]['read']
         data.pop() # Removing last element as it usually contains erroneous stats
+        current_bytes_received = 0
+        current_bytes_transmitted = 0
+        current_packets_received = 0
+        current_packets_transmitted = 0
         for container_stat in data:
             image_stats['memories'].append(get_memory_percentage(container_stat))
             image_stats['cpus'].append(get_cpu_percentage(container_stat))
             image_stats['timestamps'].append(get_time_from_start(container_stat, starting_timestamp))
-            image_stats['bytes_received'].append(container_stat['networks']['eth0']['rx_bytes']/100)
-            image_stats['bytes_transmitted'].append(container_stat['networks']['eth0']['tx_bytes']/100)
-            image_stats['packets_received'].append(container_stat['networks']['eth0']['rx_packets'])
-            image_stats['packets_transmitted'].append(container_stat['networks']['eth0']['tx_packets'])
+            image_stats['bytes_received'].append((container_stat['networks']['eth0']['rx_bytes'] - current_bytes_received)/1000)
+            image_stats['bytes_transmitted'].append((container_stat['networks']['eth0']['tx_bytes'] - current_bytes_transmitted)/1000)
+            image_stats['packets_received'].append(container_stat['networks']['eth0']['rx_packets'] - current_packets_received)
+            image_stats['packets_transmitted'].append(container_stat['networks']['eth0']['tx_packets'] - current_packets_transmitted)
+            current_bytes_received = container_stat['networks']['eth0']['rx_bytes']
+            current_bytes_transmitted = container_stat['networks']['eth0']['tx_bytes']
+            current_packets_received = container_stat['networks']['eth0']['rx_packets']
+            current_packets_transmitted = container_stat['networks']['eth0']['tx_packets']
         all_stats['memories'].append(image_stats['memories'])
         all_stats['cpus'].append(image_stats['cpus'])
         all_stats['timestamps'].append(image_stats['timestamps'])

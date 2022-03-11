@@ -12,7 +12,7 @@ for image in images:
     average_timestamps = get_average_stats(all_stats['timestamps'])
     average_packets_received = get_average_stats(all_stats['packets_received'])
     average_packets_transmitted = get_average_stats(all_stats['packets_transmitted'])
-    plot.plot([0] + average_timestamps, [0] + average_cpus_stats)
+    plot.plot([0] + average_timestamps, [0] + average_bytes_received)
     plot.title(image)
     plot.xlabel('Time (s)')
     plot.ylabel('Packets Transmitted')
