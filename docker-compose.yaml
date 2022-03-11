@@ -24,7 +24,7 @@ services:
     environment:
       - SERVER_IP=fl_server:8080
     networks:
-      default:
+      - default
     restart: always
     deploy:
       replicas: 2
@@ -37,7 +37,7 @@ services:
     environment:
       - SERVER_IP=fl_server:8080
     networks:
-      default:
+      - default
     restart: always
     deploy:
       replicas: 2
