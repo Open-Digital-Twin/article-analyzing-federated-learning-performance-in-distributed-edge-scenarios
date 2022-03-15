@@ -19,6 +19,24 @@ services:
         constraints:
           - node.labels.type==manager
 
+  new-client-1:
+    image: 'fernandoremde/flower-federated:new-client'
+    environment:
+      - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
+    networks:
+      - default
+    restart: always
+    volumes:
+      - "~/data/new-client-1:./data/cifar-10"
+    deploy:
+      replicas: 2
+      placement:
+        constraints:
+          - node.labels.type==worker
+
   client1:
     image: 'fernandoremde/flower-federated:client1'
     environment:
