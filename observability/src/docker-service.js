@@ -98,16 +98,15 @@ const getContainerImageName = (image) => {
     return found[0];
 }
 
-const getStringBetweenTwoCharacters = (firstCharacter, secondCharacter) => {
-    return str.substring(
-        str.indexOf(firstCharacter) + 1, 
-        str.lastIndexOf(secondCharacter)
+const getStringBetweenTwoCharacters = (string, firstCharacter, secondCharacter) => {
+    return string.substring(
+        string.indexOf(firstCharacter) + 1, 
+        string.lastIndexOf(secondCharacter)
     );
 }
 
 const getLastNumberInString = (string) => {
-    const lastWord = string.split(" ");
-    return lastWord[lastWord.length - 1];
+    return string.split(" ").pop();
 }
 
 const sendGetRequest = async (url) => {
