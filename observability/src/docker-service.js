@@ -75,13 +75,28 @@ exports.getContainerStats = async (host, id) => {
  exports.getServerAccuracy = async (containerId, containerHost) => {
     const response = await sendGetRequest(`http://${containerHost}:2375/containers/${containerId}/logs?stdout=true&timestamps=true`);
 
-    return response.data;
+    const timestamp = getStringBetweenTwoCharacters("W", " ");
+    const accuracy = getLastNumberInString(response.data);
+
+    return {timestamp: timestamp, accuracy: accuracy};
 }
 
 const getContainerImageName = (image) => {
     const regex = /(?<=\:)(.*?)(?=\@)/;
     const found = image.match(regex);
     return found[0];
+}
+
+const getStringBetweenTwoCharacters = (firstCharacter, secondCharacter) => {
+    return str.substring(
+        str.indexOf(firstCharacter) + 1, 
+        str.lastIndexOf(secondCharacter)
+    );
+}
+
+const getLastNumberInString = (string) => {
+    const lastWord = string.split(" ");
+    return lastWord[lastWord.length - 1];
 }
 
 const sendGetRequest = async (url) => {

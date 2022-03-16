@@ -12,11 +12,11 @@ observe = async () => {
         const updatedContainerInfos = await dockerService.getAllContainersInfosWithStats(NODES);
         const updatedContainerInfosIds = updatedContainerInfos.map(updatedContainerInfo => updatedContainerInfo.ID);
 
-        updatedContainerInfos.forEach(updatedContainerInfo => {
-            if (updatedContainerInfo.host === 'server') {
-                const accuracy = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
+        for (const updatedContainerInfo of updatedContainerInfos) {
+            if (updatedContainerInfo.image === 'server') {
+                const accuracy = await dockerService.getServerAccuracy(updatedContainerInfo.ID, updatedContainerInfo.host);
+                console.log("batata")
                 console.log(accuracy)
-
             }
             // If container already retrieved, only update the State,
             // Status, and push the retrieved Stats to the array.
@@ -32,7 +32,7 @@ observe = async () => {
             } else {
                 containerInfos.push(updatedContainerInfo);
             }
-        })
+        }
 
         // If there is a container in containerInfo which hasn't been retrieved,
         // it means the container stopped. Therefore, we can persist its stats
@@ -44,10 +44,10 @@ observe = async () => {
                 fs.mkdirSync(targetDir, { recursive: true });
                 fs.writeFileSync(`${targetDir}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
-                if (containerInfo.image === 'server') {
-                    const accuracy = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
-                    fs.writeFileSync(`${targetDir}/accuracy-${currentTime}-${containerInfo.host}`, JSON.stringify(accuracy));
-                }
+                // if (containerInfo.image === 'server') {
+                //     const accuracy = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
+                //     fs.writeFileSync(`${targetDir}/accuracy-${currentTime}-${containerInfo.host}`, JSON.stringify(accuracy));
+                // }
             }
         });
 
