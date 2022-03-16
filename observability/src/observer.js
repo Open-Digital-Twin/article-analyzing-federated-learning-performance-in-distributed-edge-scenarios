@@ -47,7 +47,7 @@ observe = async () => {
             }
         }
 
-        await sleep(5000);
+        await sleep(3000);
     }
 }
 
