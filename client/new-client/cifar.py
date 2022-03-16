@@ -12,9 +12,9 @@ import os
 
 class Net(nn.Module):
 
-    convolution = os.environ['KERNEL_SQUARE_CONVOLUTION']
-    fc1_size = os.environ['FIRST_FULLY_CONNECTED_LAYER']
-    fc2_size = os.environ['SECOND_FULLY_CONNECTED_LAYER']
+    convolution = int(os.environ['KERNEL_SQUARE_CONVOLUTION'])
+    fc1_size = int(os.environ['FIRST_FULLY_CONNECTED_LAYER'])
+    fc2_size = int(os.environ['SECOND_FULLY_CONNECTED_LAYER'])
 
     def __init__(self) -> None:
         super(Net, self).__init__()
@@ -34,7 +34,7 @@ class Net(nn.Module):
         x = self.fc3(x)
         return x
 
-def load_data(data_path = "./data/cifar-10") -> Tuple[torch.utils.data.DataLoader, torch.utils.data.DataLoader, Dict]:
+def load_data(data_path = "/data/cifar-10") -> Tuple[torch.utils.data.DataLoader, torch.utils.data.DataLoader, Dict]:
     """Load CIFAR-10 (training and test set)."""
     transform = transforms.Compose(
         [transforms.ToTensor(), transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))]
