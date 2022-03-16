@@ -58,7 +58,7 @@ def main() -> None:
     # Load model and data
     model = cifar.Net()
     model.to(DEVICE)
-    trainloader, testloader, num_examples = cifar.load_data("./data/cifar-10")
+    trainloader, testloader, num_examples = cifar.load_data("/data/cifar-10")
 
     # Start client
     server_ip = os.environ['SERVER_IP']
