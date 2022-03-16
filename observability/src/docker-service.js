@@ -65,6 +65,19 @@ exports.getContainerStats = async (host, id) => {
     return response.data;
 }
 
+/**
+ * Retrieves an array of container information for every 
+ * containers of the given nodes alongside their stats
+ * @param {string[]} nodes - List of nodes.
+ * @param {string} [port=2375] - Port to access node.
+ * @returns {Promise<ContainerInfo[]>} containerInfos - List of container information with stats.
+ */
+ exports.getServerAccuracy = async (containerId, containerHost) => {
+    const response = await sendGetRequest(`http://${containerHost}:2375/containers/${containerId}/logs?stdout=true&timestamps=true`);
+
+    return response.data;
+}
+
 const getContainerImageName = (image) => {
     const regex = /(?<=\:)(.*?)(?=\@)/;
     const found = image.match(regex);

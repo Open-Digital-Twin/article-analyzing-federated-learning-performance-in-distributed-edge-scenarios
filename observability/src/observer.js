@@ -13,6 +13,11 @@ observe = async () => {
         const updatedContainerInfosIds = updatedContainerInfos.map(updatedContainerInfo => updatedContainerInfo.ID);
 
         updatedContainerInfos.forEach(updatedContainerInfo => {
+            if (updatedContainerInfo.host === 'server') {
+                const accuracy = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
+                console.log(accuracy)
+
+            }
             // If container already retrieved, only update the State,
             // Status, and push the retrieved Stats to the array.
             // Else it's a new container, then add it to the containerInfos list.
@@ -39,6 +44,10 @@ observe = async () => {
                 fs.mkdirSync(targetDir, { recursive: true });
                 fs.writeFileSync(`${targetDir}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
+                if (containerInfo.image === 'server') {
+                    const accuracy = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
+                    fs.writeFileSync(`${targetDir}/accuracy-${currentTime}-${containerInfo.host}`, JSON.stringify(accuracy));
+                }
             }
         });
 
