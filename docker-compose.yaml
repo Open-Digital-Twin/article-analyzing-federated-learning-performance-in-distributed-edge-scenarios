@@ -30,7 +30,7 @@ services:
       - default
     restart: always
     volumes:
-      - "~/data/new-client-1:./data/cifar-10"
+      - "~/data/new-client-1:/data/cifar-10"
     deploy:
       replicas: 2
       placement:
