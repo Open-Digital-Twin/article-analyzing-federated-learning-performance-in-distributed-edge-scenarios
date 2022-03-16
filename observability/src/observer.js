@@ -32,7 +32,7 @@ observe = async () => {
         // If there is a container in containerInfo which hasn't been retrieved,
         // it means the container stopped. Therefore, we can persist its stats
         // and remove it from the list
-        for ([index, containerInfo] of containerInfos.entries()) {
+        for (const [index, containerInfo] of containerInfos.entries()) {
             if (!updatedContainerInfosIds.includes(containerInfo.ID)) {
                 const currentTime = new Date().toISOString();
                 const targetDir = `/reports/${EXPERIMENT_NAME}/${containerInfo.image}`;
@@ -40,8 +40,9 @@ observe = async () => {
                 fs.writeFileSync(`${targetDir}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
                 if (containerInfo.image === 'server') {
-                    const accuraciesTargetDir = fs.mkdirSync(`${targetDir}/accuracies`, { recursive: true });
+                    const accuraciesTargetDir = `${targetDir}/accuracies`;
                     const accuracies = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
+                    fs.mkdirSync(accuraciesTargetDir, { recursive: true });
                     fs.writeFileSync(`${accuraciesTargetDir}/accuracy-${currentTime}-${containerInfo.host}`, JSON.stringify(accuracies));
                 }
             }
