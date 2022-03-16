@@ -34,8 +34,6 @@ observe = async () => {
         // and remove it from the list
         containerInfos.forEach((containerInfo, index) => {
             if (!updatedContainerInfosIds.includes(containerInfo.ID)) {
-                console.info(containerInfo);
-
                 const currentTime = new Date().toISOString();
                 const targetDir = `/reports/${EXPERIMENT_NAME}/${containerInfo.image}`;
                 fs.mkdirSync(targetDir, { recursive: true });
