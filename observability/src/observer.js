@@ -12,12 +12,7 @@ observe = async () => {
         const updatedContainerInfos = await dockerService.getAllContainersInfosWithStats(NODES);
         const updatedContainerInfosIds = updatedContainerInfos.map(updatedContainerInfo => updatedContainerInfo.ID);
 
-        for (const updatedContainerInfo of updatedContainerInfos) {
-            if (updatedContainerInfo.image === 'server') {
-                const accuracy = await dockerService.getServerAccuracy(updatedContainerInfo.ID, updatedContainerInfo.host);
-                console.log("batata")
-                console.log(accuracy)
-            }
+        updatedContainerInfos.forEach(updatedContainerInfo => {
             // If container already retrieved, only update the State,
             // Status, and push the retrieved Stats to the array.
             // Else it's a new container, then add it to the containerInfos list.
@@ -32,24 +27,25 @@ observe = async () => {
             } else {
                 containerInfos.push(updatedContainerInfo);
             }
-        }
+        });
 
         // If there is a container in containerInfo which hasn't been retrieved,
         // it means the container stopped. Therefore, we can persist its stats
         // and remove it from the list
-        containerInfos.forEach((containerInfo, index) => {
+        for ([index, containerInfo] of containerInfos.entries()) {
             if (!updatedContainerInfosIds.includes(containerInfo.ID)) {
                 const currentTime = new Date().toISOString();
                 const targetDir = `/reports/${EXPERIMENT_NAME}/${containerInfo.image}`;
                 fs.mkdirSync(targetDir, { recursive: true });
                 fs.writeFileSync(`${targetDir}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
-                // if (containerInfo.image === 'server') {
-                //     const accuracy = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
-                //     fs.writeFileSync(`${targetDir}/accuracy-${currentTime}-${containerInfo.host}`, JSON.stringify(accuracy));
-                // }
+                if (containerInfo.image === 'server') {
+                    const accuraciesTargetDir = fs.mkdirSync(`${targetDir}/accuracies`, { recursive: true });
+                    const accuracies = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
+                    fs.writeFileSync(`${accuraciesTargetDir}/accuracy-${currentTime}-${containerInfo.host}`, JSON.stringify(accuracies));
+                }
             }
-        });
+        }
 
         await sleep(5000);
     }

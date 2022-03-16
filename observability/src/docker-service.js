@@ -1,6 +1,12 @@
 const axios = require('axios');
 
 /**
+ * @typedef {Object} ServerAccuracy
+ * @property {string[]} serverAccuracy.accuracies - Array of accuracies for the server
+ * @property {string[]} serverAccuracy.timestamps - Array of timestamps for the server
+ */
+
+/**
  * @typedef {Object} ContainerInfo
  * @property {string} containerInfos[].ID - The container ID.
  * @property {string} containerInfos[].host - The node hosting the container.
@@ -66,19 +72,24 @@ exports.getContainerStats = async (host, id) => {
 }
 
 /**
- * Retrieves an array of container information for every 
- * containers of the given nodes alongside their stats
- * @param {string[]} nodes - List of nodes.
- * @param {string} [port=2375] - Port to access node.
- * @returns {Promise<ContainerInfo[]>} containerInfos - List of container information with stats.
+ * Retrieves objects containing array for timestamps and
+ * accuracies of a given container following FlowerML stoud
+ * format: 
+ * {timestamp} Round 1 accuracy aggregated from client results: {accuracy}
+ * @param {string} containerId - ID of a container
+ * @param {string} containerHost - Host in which container is hosted
+ * @returns {Promise<ServerAccuracy>} serverAccuracy - Accuracies and timestamps for a server
  */
  exports.getServerAccuracy = async (containerId, containerHost) => {
     const response = await sendGetRequest(`http://${containerHost}:2375/containers/${containerId}/logs?stdout=true&timestamps=true`);
+    const lines = response.data.split("\n");
 
-    const timestamp = getStringBetweenTwoCharacters("W", " ");
-    const accuracy = getLastNumberInString(response.data);
+    lines.pop(); // Removes last line which is always empty
 
-    return {timestamp: timestamp, accuracy: accuracy};
+    const timestamps = lines.map(line => getStringBetweenTwoCharacters(line, "W", "Z"));
+    const accuracies = lines.map(line => getLastNumberInString(line));
+     
+    return {timestamps: timestamps, accuracies: accuracies};
 }
 
 const getContainerImageName = (image) => {
