@@ -8,6 +8,7 @@ full-client
 node_modules
 out
 docs
+new-clients
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
