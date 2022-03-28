@@ -7,9 +7,9 @@ services:
     environment:
       - SERVER_IP=0.0.0.0:8080
       - FRACTION_FIT=0.1
-      - MIN_FIT_CLIENTS=4
-      - MIN_AVAILABLE_CLIENTS=4
-      - NUM_ROUNDS=3
+      - MIN_FIT_CLIENTS=10
+      - MIN_AVAILABLE_CLIENTS=10
+      - NUM_ROUNDS=10
     networks:
       - default
     restart: always
@@ -19,8 +19,8 @@ services:
         constraints:
           - node.labels.type==manager
 
-  new-client-1:
-    image: 'fernandoremde/flower-federated:new-client'
+  greenclient0:
+    image: 'fernandoremde/flower-federated:green-client-0'
     environment:
       - SERVER_IP=fl_server:8080
       - KERNEL_SQUARE_CONVOLUTION=5
@@ -29,36 +29,152 @@ services:
     networks:
       - default
     restart: always
-    volumes:
-      - "~/data/new-client-1:/data/cifar-10"
     deploy:
-      replicas: 2
+      replicas: 1
       placement:
         constraints:
           - node.labels.type==worker
 
-  client1:
-    image: 'fernandoremde/flower-federated:client1'
+  greenclient1:
+    image: 'fernandoremde/flower-federated:green-client-1'
     environment:
       - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
     networks:
       - default
     restart: always
     deploy:
-      replicas: 2
+      replicas: 1
       placement:
         constraints:
           - node.labels.type==worker
- 
-  client2:
-    image: 'fernandoremde/flower-federated:client2'
+
+  greenclient2:
+    image: 'fernandoremde/flower-federated:green-client-2'
     environment:
       - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
     networks:
       - default
     restart: always
     deploy:
-      replicas: 2
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type==worker
+
+  greenclient3:
+    image: 'fernandoremde/flower-federated:green-client-3'
+    environment:
+      - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
+    networks:
+      - default
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type==worker
+
+  greenclient4:
+    image: 'fernandoremde/flower-federated:green-client-4'
+    environment:
+      - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
+    networks:
+      - default
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type==worker
+
+  greenclient5:
+    image: 'fernandoremde/flower-federated:green-client-5'
+    environment:
+      - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
+    networks:
+      - default
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type==worker
+
+  greenclient6:
+    image: 'fernandoremde/flower-federated:green-client-6'
+    environment:
+      - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
+    networks:
+      - default
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type==worker
+
+  greenclient7:
+    image: 'fernandoremde/flower-federated:green-client-7'
+    environment:
+      - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
+    networks:
+      - default
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type==worker
+
+  greenclient8:
+    image: 'fernandoremde/flower-federated:green-client-8'
+    environment:
+      - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
+    networks:
+      - default
+    restart: always
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.labels.type==worker
+
+  greenclient9:
+    image: 'fernandoremde/flower-federated:green-client-9'
+    environment:
+      - SERVER_IP=fl_server:8080
+      - KERNEL_SQUARE_CONVOLUTION=5
+      - FIRST_FULLY_CONNECTED_LAYER=120
+      - SECOND_FULLY_CONNECTED_LAYER=84
+    networks:
+      - default
+    restart: always
+    deploy:
+      replicas: 1
       placement:
         constraints:
           - node.labels.type==worker
