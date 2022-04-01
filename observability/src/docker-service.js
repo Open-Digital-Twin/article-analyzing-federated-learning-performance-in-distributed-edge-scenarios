@@ -29,7 +29,9 @@ exports.getAllContainersInfosWithStats = async (nodes, port) => {
         const stats = await this.getContainerStats(containerInfo.host, containerInfo.ID);
         if (containerInfo.image === 'server') {
             const accuracy = await this.getServerAccuracy(containerInfo.ID, containerInfo.host);
-            stats.accuracy = accuracy;
+            if (accuracy >= 0) {
+                stats.accuracy = accuracy;
+            }
         }
         containerInfo.stats = [stats];
     }
@@ -78,16 +80,18 @@ exports.getContainerStats = async (host, id) => {
 }
 
 /**
- * Retrieves objects containing array for timestamps and
- * accuracies of a given container following FlowerML stoud
- * format: 
- * {timestamp} Round 1 accuracy aggregated from client results: {accuracy}
+ * Retrieves accuracy for a given container, taking into account
+ * that the container is a server which logs accuracy. If the container
+ * cannot be found, returns -1.
  * @param {string} containerId - ID of a container
  * @param {string} containerHost - Host in which container is hosted
  * @returns {Promise<Number>} serverAccuracy - Current accuracy for the server
  */
  exports.getServerAccuracy = async (containerId, containerHost) => {
     const response = await sendGetRequest(`http://${containerHost}:2375/containers/${containerId}/logs?stdout=true&timestamps=true`);
+    if (!response) {
+        return -1;
+    }
     const lines = response.data.split("\n");
 
     lines.pop(); // Removes last line which is always empty
