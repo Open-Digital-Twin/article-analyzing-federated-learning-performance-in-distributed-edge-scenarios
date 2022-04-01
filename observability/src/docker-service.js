@@ -93,9 +93,12 @@ exports.getContainerStats = async (host, id) => {
     lines.pop(); // Removes last line which is always empty
 
     const lastLine = lines.slice(-1)[0]
-    const accuracy = getLastNumberInString(lastLine);
-     
-    return accuracy;
+
+    if (lastLine) {
+        return getLastNumberInString(lastLine);
+    }
+
+    return 0;
 }
 
 const getContainerImageName = (image) => {
