@@ -39,12 +39,6 @@ observe = async () => {
                 fs.mkdirSync(targetDir, { recursive: true });
                 fs.writeFileSync(`${targetDir}/${currentTime}-${containerInfo.host}`, JSON.stringify(containerInfo.stats));
                 containerInfos.splice(index, 1);
-                if (containerInfo.image === 'server') {
-                    const accuraciesTargetDir = `${targetDir}/accuracies`;
-                    const accuracies = await dockerService.getServerAccuracy(containerInfo.ID, containerInfo.host);
-                    fs.mkdirSync(accuraciesTargetDir, { recursive: true });
-                    fs.writeFileSync(`${accuraciesTargetDir}/accuracy-${currentTime}-${containerInfo.host}`, JSON.stringify(accuracies));
-                }
             }
         }
     }

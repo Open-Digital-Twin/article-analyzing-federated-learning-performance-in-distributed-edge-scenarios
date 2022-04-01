@@ -27,6 +27,10 @@ exports.getAllContainersInfosWithStats = async (nodes, port) => {
     const containerInfos = await this.getAllContainersInfos(nodes, port);
     for (const containerInfo of containerInfos) {
         const stats = await this.getContainerStats(containerInfo.host, containerInfo.ID);
+        if (containerInfo.image === 'server') {
+            const accuracy = await this.getServerAccuracy(containerInfo.ID, containerInfo.host);
+            stats.accuracy = accuracy;
+        }
         containerInfo.stats = [stats];
     }
 
@@ -80,7 +84,7 @@ exports.getContainerStats = async (host, id) => {
  * {timestamp} Round 1 accuracy aggregated from client results: {accuracy}
  * @param {string} containerId - ID of a container
  * @param {string} containerHost - Host in which container is hosted
- * @returns {Promise<ServerAccuracy>} serverAccuracy - Accuracies and timestamps for a server
+ * @returns {Promise<Number>} serverAccuracy - Current accuracy for the server
  */
  exports.getServerAccuracy = async (containerId, containerHost) => {
     const response = await sendGetRequest(`http://${containerHost}:2375/containers/${containerId}/logs?stdout=true&timestamps=true`);
@@ -88,23 +92,16 @@ exports.getContainerStats = async (host, id) => {
 
     lines.pop(); // Removes last line which is always empty
 
-    const timestamps = lines.map(line => getStringBetweenTwoCharacters(line, "W", "Z"));
-    const accuracies = lines.map(line => getLastNumberInString(line));
+    const lastLine = lines.slice(-1)[0]
+    const accuracy = getLastNumberInString(lastLine);
      
-    return {timestamps: timestamps, accuracies: accuracies};
+    return accuracy;
 }
 
 const getContainerImageName = (image) => {
     const regex = /(?<=\:)(.*?)(?=\@)/;
     const found = image.match(regex);
     return found[0];
-}
-
-const getStringBetweenTwoCharacters = (string, firstCharacter, secondCharacter) => {
-    return string.substring(
-        string.indexOf(firstCharacter) + 1, 
-        string.lastIndexOf(secondCharacter)
-    );
 }
 
 const getLastNumberInString = (string) => {
