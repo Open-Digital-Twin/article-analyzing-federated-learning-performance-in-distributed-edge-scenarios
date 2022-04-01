@@ -47,17 +47,11 @@ observe = async () => {
                 }
             }
         }
-
-        await sleep(3000);
     }
 }
 
 const anyContainerIsRunning = (containerInfos) => {
     return containerInfos.some(containerInfo => containerInfo.state === 'running');
-}
-
-const sleep = (ms) => {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 module.exports = observe();
