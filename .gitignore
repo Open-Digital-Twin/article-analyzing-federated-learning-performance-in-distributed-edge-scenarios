@@ -9,6 +9,7 @@ node_modules
 out
 docs
 new-clients
+averages
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
