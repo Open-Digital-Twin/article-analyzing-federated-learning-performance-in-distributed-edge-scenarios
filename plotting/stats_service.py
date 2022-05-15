@@ -122,6 +122,36 @@ def create_average_stats_log_object(root_dir, for_server):
     
     return averaged_stats_objects
 
+# Receives directory containing folders with logs already averaged 
+# and returns an array with an average of every stats file.
+def create_average_stats_log_object_from_averages(root_dir):
+    file_paths = []
+    all_stats_objects = []
+    averaged_stats_objects = []
+    for root, dirs, files in os.walk(root_dir):
+        for name in files:
+            file_paths.append(os.path.join(root, name))
+
+    for file in file_paths:
+        stats_objects = open_file(file)
+        all_stats_objects.append(stats_objects)
+
+    # find maximum length to make sure we iterate through all indexes
+    maximum_length = 0
+    for stats_array in all_stats_objects:
+        maximum_length = max(maximum_length, len(stats_array))
+    
+    i = 0
+    while i < maximum_length:
+        local_object_array = []
+        for stats_array in all_stats_objects:
+            if (i < len(stats_array)):
+                local_object_array.append(stats_array[i])
+        df = pd.DataFrame(local_object_array)
+        averaged_stats_objects.append(dict(df.mean()))
+        i += 1
+    
+    return averaged_stats_objects
 def get_maximum_accuracy(file):
     maximum_accuracy = 0
     data = open_file(file)
@@ -165,3 +195,11 @@ def get_packets_and_bytes_transmitted(file):
 
 def get_cpu_and_memory(file):
     return [get_average_cpu_usage(file), get_average_memory_usage(file), file]
+
+def get_cpu_and_time(file):
+    data = open_file(file)
+    return [get_average_cpu_usage(file), data[-1]['timestamps'], file]
+
+def get_memory_and_time(file):
+    data = open_file(file)
+    return [get_average_memory_usage(file), data[-1]['timestamps'], file]
